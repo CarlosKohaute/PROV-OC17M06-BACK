@@ -7,6 +7,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -45,14 +47,18 @@ export class UsersController {
 
   @Patch(":id")
   @ApiOperation({
-    summary: "Editar user pelo id.",
+    summary: "Editar usuário pelo id.",
   })
   update(@Param("id") id: string, @Body() dto: UpdateUserDto): Promise<User> {
     return this.usersService.update(id, dto);
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.usersService.remove(+id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Remover um usuário pelo ID',
+  })
+  delete(@Param('id') id: string) {
+    this.usersService.delete(id);
   }
 }
