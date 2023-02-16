@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { AppService } from "./app.service";
 
 @ApiTags("status")
@@ -9,6 +9,9 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
+  @ApiOperation({
+    summary: "Visualizar status",
+  })
   getAppStatus(): string {
     return this.appService.getAppStatus();
   }
