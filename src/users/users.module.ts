@@ -4,6 +4,7 @@ import { UsersService } from "./users.service";
 import { UsersController } from "./users.controller";
 
 @Module({
+  imports: [],
   controllers: [UsersController],
   providers: [UsersService],
 })
