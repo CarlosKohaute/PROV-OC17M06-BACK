@@ -12,13 +12,17 @@ export class UsersService {
   findAll(): Promise<User[]> {
     return this.prisma.user.findMany();
   }
-  create(dto: CreateUserDto) {
+  create(dto: CreateUserDto): Promise<User> {
     const data: User = { ...dto };
 
     return this.prisma.user.create({ data });
   }
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: string): Promise<User> {
+    return this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
