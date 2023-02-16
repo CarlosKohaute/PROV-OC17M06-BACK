@@ -1,12 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from "@nestjs/common";
+import { LoginResponseDto } from "./dto/login.response.dto";
 import { LoginDto } from "./dto/login.dto";
 
 @Injectable()
 export class AuthService {
-  login(
-    loginDto: LoginDto
-  ): Promise<import("./dto/login.response.dto").LoginResponseDto> {
-    throw new Error("Method not implemented.");
+  async login(loginDto: LoginDto): Promise<LoginResponseDto> {
+    return {
+      token: "Test",
+      user: undefined,
+    };
   }
 }
