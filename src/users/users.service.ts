@@ -25,8 +25,13 @@ export class UsersService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(id: string, dto: UpdateUserDto): Promise<User> {
+    const data: Partial<User> = { ...dto };
+
+    return this.prisma.user.update({
+      where: { id },
+      data,
+    });
   }
 
   remove(id: number) {
