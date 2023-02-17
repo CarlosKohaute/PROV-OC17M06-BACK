@@ -9,56 +9,69 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./entities/user.entitie";
+import { AuthGuard } from "@nestjs/passport";
 
-@ApiTags("user")
-@Controller("users")
+@ApiTags("Users")
+@Controller("Users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
   @ApiOperation({
-    summary: "Criar novo usuário.",
+    summary: "Criar um novo usuário",
   })
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.usersService.create(createUserDto);
+  create(@Body() dto: CreateUserDto): Promise<User | void> {
+    return this.usersService.create(dto);
   }
 
   @Get()
+  @UseGuards(AuthGuard())
   @ApiOperation({
-    summary: "Listar todos os usuários.",
+    summary: "Lista todos os usuários",
   })
+  @ApiBearerAuth()
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(":id")
+  @UseGuards(AuthGuard())
   @ApiOperation({
-    summary: "Listar usuário por id.",
+    summary: "Lista usuário por id",
   })
+  @ApiBearerAuth()
   findOne(@Param("id") id: string): Promise<User> {
     return this.usersService.findOne(id);
   }
 
   @Patch(":id")
+  @UseGuards(AuthGuard())
   @ApiOperation({
-    summary: "Editar usuário pelo id.",
+    summary: "Atualizar um usuário",
   })
-  update(@Param("id") id: string, @Body() dto: UpdateUserDto): Promise<User> {
+  @ApiBearerAuth()
+  update(
+    @Param("id") id: string,
+    @Body() dto: UpdateUserDto
+  ): Promise<User | void> {
     return this.usersService.update(id, dto);
   }
 
   @Delete(":id")
+  @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
-    summary: 'Remover um usuário pelo ID',
+    summary: "Deleção de um usuário",
   })
-  delete(@Param('id') id: string) {
-    this.usersService.delete(id);
+  @ApiBearerAuth()
+  remove(@Param("id") id: string) {
+    return this.usersService.remove(id);
   }
 }
