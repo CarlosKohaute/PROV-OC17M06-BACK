@@ -1,33 +1,38 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import * as bcrypt from "bcrypt";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { LoginResponseDto } from "./dto/login.response.dto";
+import { User } from "src/users/entities/user.entitie";
+import * as bcrypt from "bcrypt";
 import { LoginDto } from "./dto/login.dto";
+import { LoginResponseDto } from "./dto/login.response.dto";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtservice: JwtService
+  ) {}
+  async login(dto: LoginDto): Promise<LoginResponseDto> {
+    const { email, password } = dto;
 
-  async login(loginDto: LoginDto): Promise<LoginResponseDto> {
-    const { email, password } = loginDto;
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-    });
+    const user: User = await this.prisma.user.findUnique({ where: { email } });
+
     if (!user) {
-      throw new UnauthorizedException("Wrong username or password");
+      throw new NotFoundException("Email or password invalid");
     }
-    const isHashValid = await bcrypt.compare(password, user.password);
-
-    if (!isHashValid) {
-      throw new UnauthorizedException("Wrong username or password");
+    const passwordMatch: boolean = await bcrypt.compare(
+      password,
+      user.password
+    );
+    if (!passwordMatch) {
+      throw new NotFoundException("Email or password invalid");
     }
 
     delete user.password;
 
-    return {
-      token: "Teste",
-      user,
-    };
+    const token: string = this.jwtservice.sign({ email });
+
+    return { token, user };
   }
 }

@@ -4,13 +4,14 @@ import { User } from "src/users/entities/user.entitie";
 
 export class LoginResponseDto {
   @ApiProperty({
-    description: "JWT generated from login",
-    example: "TOKEN_AUTOMATIC_GENERATED",
+    description: "Token gerado no login",
+    example:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5bGFuQGJvc2Nhcmluby5jb20iLCJwYXNzd29yZCI6InlhMGdzcWh5NHd6dnV2YjQifQ.yN_8-Mge9mFgsnYHnPEh_ZzNP7YKvSbQ3Alug9HMCsM",
   })
   token: string;
 
   @ApiProperty({
-    description: "User data auth",
+    description: "Dados do usuário que realizou o login",
   })
   user: User;
 }

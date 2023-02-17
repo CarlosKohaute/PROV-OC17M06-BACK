@@ -10,12 +10,12 @@ import { LoginResponseDto } from "./dto/login.response.dto";
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
+  @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: "Realize login, receiving some token for auth",
   })
-  login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
-    return this.authService.login(loginDto);
+  login(@Body() dto: LoginDto): Promise<LoginResponseDto> {
+    return this.authService.login(dto);
   }
 }
