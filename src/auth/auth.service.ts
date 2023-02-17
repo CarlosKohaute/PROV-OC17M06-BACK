@@ -21,6 +21,7 @@ export class AuthService {
     if (!user) {
       throw new NotFoundException("Email or password invalid");
     }
+
     const passwordMatch: boolean = await bcrypt.compare(
       password,
       user.password

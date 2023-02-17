@@ -2,7 +2,6 @@
 import {
   Injectable,
   NotFoundException,
-  UnprocessableEntityException,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -17,8 +16,6 @@ export class UsersService {
     id: true,
     name: true,
     email: true,
-    updatedAt: true,
-    createdAt: true,
   };
   constructor(private readonly prisma: PrismaService) {}
 
